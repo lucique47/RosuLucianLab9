@@ -18,6 +18,7 @@ namespace RosuLucianLab7.Data
             _database.CreateTableAsync<ShopList>().Wait();
             _database.CreateTableAsync<Product>().Wait();
             _database.CreateTableAsync<ListProduct>().Wait();
+            _database.CreateTableAsync(typeof(Shop)).Wait();
         }
 
         public Task<int> SaveProductAsync(Product product)
@@ -79,6 +80,19 @@ namespace RosuLucianLab7.Data
         internal async Task DeleteShopListAsync(ShopList slist)
         {
             await _database.DeleteAsync(slist);
+        }
+        public Task<List<Shop>> GetShopsAsync() => _database.QueryAsync<Shop>("SELECT ID, ShopName, Adress FROM Shop");
+
+        public Task<int> SaveShopAsync(Shop shop)
+        {
+            if (shop.ID != 0)
+            {
+                return _database.UpdateAsync(shop);
+            }
+            else
+            {
+                return _database.InsertAsync(shop);
+            }
         }
     }
 }
